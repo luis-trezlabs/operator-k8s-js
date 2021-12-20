@@ -1,0 +1,14 @@
+{
+  "name": "operator",
+  "version": "1.0.0",
+  "description": "Operator K8s with JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "luis and marvin",
+  "license": "ISC",
+  "dependencies": {
+    "@kubernetes/client-node": "^0.16.1"
+  }
+}
