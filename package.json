@@ -4,11 +4,17 @@
   "description": "Operator K8s with JS",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node dist/index.js"
   },
   "author": "luis and marvin",
   "license": "ISC",
   "dependencies": {
-    "@kubernetes/client-node": "^0.16.1"
+    "@dot-i/k8s-operator": "^1.2.0",
+    "@kubernetes/client-node": "^0.16.1",
+    "node-cron": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4"
   }
 }

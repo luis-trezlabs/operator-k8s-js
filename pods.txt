@@ -1,0 +1,14 @@
+Date: 12/20/2021, 5:34:10 PM - openldap-65fcd97dcb-w4fg9
+Date: 12/20/2021, 5:34:10 PM - ingress-nginx-admission-patch--1-dwc5g
+Date: 12/20/2021, 5:34:10 PM - ingress-nginx-admission-create--1-w975d
+Date: 12/20/2021, 5:34:10 PM - ingress-nginx-controller-5f66978484-jjzxc
+Date: 12/20/2021, 5:34:10 PM - keycloak-0
+Date: 12/20/2021, 5:34:10 PM - keycloak-postgresql-0
+Date: 12/20/2021, 5:34:10 PM - kube-operator-controller-manager-59c4664d84-k79lx
+Date: 12/20/2021, 5:34:10 PM - coredns-78fcd69978-s4bfs
+Date: 12/20/2021, 5:34:10 PM - etcd-minikube
+Date: 12/20/2021, 5:34:10 PM - kube-apiserver-minikube
+Date: 12/20/2021, 5:34:10 PM - kube-controller-manager-minikube
+Date: 12/20/2021, 5:34:10 PM - kube-proxy-kdszm
+Date: 12/20/2021, 5:34:10 PM - kube-scheduler-minikube
+Date: 12/20/2021, 5:34:10 PM - storage-provisioner
