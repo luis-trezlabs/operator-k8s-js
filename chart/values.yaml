@@ -1,0 +1,4 @@
+name: print-operator
+deployment:
+  image: marvintrezlabs/print-operator
+  tag: latest

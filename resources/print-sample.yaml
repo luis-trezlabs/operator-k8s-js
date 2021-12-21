@@ -5,3 +5,4 @@ metadata:
   namespace: default
 spec:
   path: pods.txt
+  schedule: "*/8 * * * * *"

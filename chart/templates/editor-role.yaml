@@ -1,13 +1,13 @@
-# permissions for end users to edit mycustomresources.
+# permissions for end users to edit prints.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: print-operator-editor-role
+  name: "{{ .Values.name }}-editor-role"
 rules:
   - apiGroups:
-      - custom.example.com
+      - stable.marvfadev.me
     resources:
-      - mycustomresources
+      - prints
     verbs:
       - create
       - delete
@@ -19,7 +19,7 @@ rules:
   - apiGroups:
       - custom.example.com
     resources:
-      - mycustomresources/status
+      - prints/status
     verbs:
       - create
       - delete

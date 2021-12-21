@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+  labels:
+    app: {{ .Values.name }}
+    app.kubernetes.io/component: {{ .Values.name }}
+    app.kubernetes.io/instance: {{ .Values.name }}
+  name: {{ .Values.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: {{ .Values.name }}
+  template:
+    metadata:
+      labels:
+        deployment: {{ .Values.name }}
+    spec:
+      containers:
+        - name: {{ .Values.name }}
+          image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
+          imagePullPolicy: IfNotPresent
+          # ports:
+          #   - containerPort: 8080
+          #     protocol: TCP
+      serviceAccount: {{ .Values.name }}

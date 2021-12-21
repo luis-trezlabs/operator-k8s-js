@@ -5,6 +5,7 @@ export interface PrintResource extends KubernetesObject {
 }
 export interface PrintResourceSpec {
     path: string;
+    schedule: string;
 }
 export default class MyOperator extends Operator {
     protected init(): Promise<void>;
