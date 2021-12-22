@@ -3,23 +3,12 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: "{{ .Values.name }}-editor-role"
+  namespace: {{ .Values.name }}
 rules:
   - apiGroups:
       - stable.marvfadev.me
     resources:
       - prints
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - custom.example.com
-    resources:
-      - prints/status
     verbs:
       - create
       - delete

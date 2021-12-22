@@ -29,4 +29,6 @@ spec:
                   type: string
                 schedule:
                   type: string
+                filename:
+                  type: string
 

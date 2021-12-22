@@ -1,28 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata:
-  annotations:
-    deployment.kubernetes.io/revision: '1'
-  labels:
-    app: {{ .Values.name }}
-    app.kubernetes.io/component: {{ .Values.name }}
-    app.kubernetes.io/instance: {{ .Values.name }}
+metadata: 
   name: {{ .Values.name }}
+  namespace: {{ .Values.name }}
+  labels:
+    app: "{{ .Values.name }}"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      deployment: {{ .Values.name }}
+      app: "{{ .Values.name }}"
   template:
     metadata:
       labels:
-        deployment: {{ .Values.name }}
+        app: "{{ .Values.name }}"
     spec:
       containers:
-        - name: {{ .Values.name }}
-          image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
-          imagePullPolicy: IfNotPresent
+        - image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
+          name: {{ .Values.name }}
+          volumeMounts:
+          - mountPath: /usr/share/prints
+            name: prints-volume
           # ports:
           #   - containerPort: 8080
           #     protocol: TCP
-      serviceAccount: {{ .Values.name }}
+      volumes:
+      - name: prints-volume
+        hostPath:
+          #Directory on the host
+          path: /prints
+      serviceAccountName: {{ .Values.name }}

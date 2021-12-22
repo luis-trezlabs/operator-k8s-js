@@ -6,8 +6,8 @@ const cron = require('node-cron');
 const fs = require('fs')
 //Creating new instance of the kubeconfig class from the api to access methods
 const kc = new k8s.KubeConfig()
-//Loading kubeconfig context from default
-kc.loadFromDefault()
+//Loading kubeconfig context from default/ cluster
+kc.loadFromCluster()
 // Declaring api client for the v1 kubernetes api
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api)
 
@@ -19,15 +19,18 @@ export interface PrintResource extends KubernetesObject {
 export interface PrintResourceSpec {
     path: string
     schedule: string
+    filename: string
 }
 
 //Where we are going to save the node-cron schedule, with a custom string key
 var scheduledPrints: {[key:string]:any} = {};  
 
 export default class MyOperator extends Operator {
-    
     protected async init() {
+        //Setting my kubeconfig to be loaded from the cluster and not from default on the operator-node module
+        this.kubeConfig.loadFromCluster();
 
+        console.info('Watching for Print CRD to be created. Pls create one...')
         //Watching the CRD using the watchresource method from the library, that callbacks with an event object with
         //The resource data, the event type 
         await this.watchResource('stable.marvfadev.me', 'v1', 'prints', async (e) => {
@@ -35,7 +38,7 @@ export default class MyOperator extends Operator {
             //if not, it will not recognize the spec fields
             const object = e.object as PrintResource
             //Getting or interests values from the yaml file
-            const path = object.spec?.path || 'pods.txt'
+            const path = `/usr/share/prints/${object.spec?.path || '' }/${object.spec?.filename}.txt` || '/usr/share/prints/pods.txt'
             const schedule = object.spec?.schedule || '*/8 * * * * *'
             const name = object.metadata?.name || 'print-sample'
 

@@ -25,25 +25,28 @@ const cron = require('node-cron');
 const fs = require('fs');
 //Creating new instance of the kubeconfig class from the api to access methods
 const kc = new k8s.KubeConfig();
-//Loading kubeconfig context from default
-kc.loadFromDefault();
+//Loading kubeconfig context from default/ cluster
+kc.loadFromCluster();
 // Declaring api client for the v1 kubernetes api
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 //Where we are going to save the node-cron schedule, with a custom string key
 var scheduledPrints = {};
 class MyOperator extends k8s_operator_1.default {
     async init() {
+        //Setting my kubeconfig to be loaded from the cluster and not from default on the operator-node module
+        this.kubeConfig.loadFromCluster();
+        console.info('Watching for Print CRD to be created. Pls create one...');
         //Watching the CRD using the watchresource method from the library, that callbacks with an event object with
         //The resource data, the event type 
         await this.watchResource('stable.marvfadev.me', 'v1', 'prints', async (e) => {
-            var _a, _b, _c;
+            var _a, _b, _c, _d;
             //Telling the compiler that the object should be treated as a Print resource Type
             //if not, it will not recognize the spec fields
             const object = e.object;
             //Getting or interests values from the yaml file
-            const path = ((_a = object.spec) === null || _a === void 0 ? void 0 : _a.path) || 'pods.txt';
-            const schedule = ((_b = object.spec) === null || _b === void 0 ? void 0 : _b.schedule) || '*/8 * * * * *';
-            const name = ((_c = object.metadata) === null || _c === void 0 ? void 0 : _c.name) || 'print-sample';
+            const path = `/usr/share/prints/${((_a = object.spec) === null || _a === void 0 ? void 0 : _a.path) || ''}/${(_b = object.spec) === null || _b === void 0 ? void 0 : _b.filename}.txt` || '/usr/share/prints/pods.txt';
+            const schedule = ((_c = object.spec) === null || _c === void 0 ? void 0 : _c.schedule) || '*/8 * * * * *';
+            const name = ((_d = object.metadata) === null || _d === void 0 ? void 0 : _d.name) || 'print-sample';
             //Switching the event type
             switch (e.type) {
                 case k8s_operator_1.ResourceEventType.Added:

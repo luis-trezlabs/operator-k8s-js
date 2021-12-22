@@ -7,9 +7,11 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
+RUN mkdir /usr/share/prints
 
 # Bundle app source
 COPY . .
 
-EXPOSE 8080
-CMD [ "node", "dist/index.js" ]
+CMD [ "node", "./dist/index.js" ]
+
+
