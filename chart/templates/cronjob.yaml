@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata: 
+  name: {{ .Values.name }}
+  namespace: {{ .Values.name }}
+spec:
+  schedule: "{{ .Values.data.schedule }}"
+  jobTemplate:
+    spec:  
+      template:
+        metadata:
+          labels:
+            app: "{{ .Values.name }}"
+        spec:
+          containers:
+            - image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
+              name: {{ .Values.name }}
+              volumeMounts:
+              - mountPath: /usr/share/prints
+                name: prints-volume
+              # ports:
+              #   - containerPort: 8080
+              #     protocol: TCP
+              env:
+              - name: PRINT_PATH
+                value: {{.Values.data.path}}
+              - name: PRINT_FILENAME
+                value: {{.Values.data.filename}}
+          volumes:
+          - name: prints-volume
+            hostPath:
+              #Directory on the host
+              path: /prints
+          restartPolicy: OnFailure
+          serviceAccountName: {{ .Values.name }}

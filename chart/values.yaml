@@ -1,4 +1,8 @@
-name: print-operator
+name: print-pods
 deployment:
-  image: marvintrezlabs/print-operator
+  image: marvintrezlabs/print-pods
   tag: latest
+data:
+  schedule: "* * * * *"
+  path: 'test/'
+  filename: 'pods'

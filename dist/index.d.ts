@@ -1,13 +1,7 @@
-import Operator from '@dot-i/k8s-operator';
-import { KubernetesObject } from '@kubernetes/client-node';
-export interface PrintResource extends KubernetesObject {
-    spec: PrintResourceSpec;
-}
-export interface PrintResourceSpec {
-    path: string;
-    schedule: string;
-    filename: string;
-}
-export default class MyOperator extends Operator {
-    protected init(): Promise<void>;
-}
+declare const k8s: any;
+declare const fs: any;
+declare const kc: any;
+declare const k8sApi: any;
+declare const path: string;
+declare const filename: string;
+declare const full_path: string;
