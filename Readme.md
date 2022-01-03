@@ -27,12 +27,19 @@ metadata:
   name: print-sample
   namespace: default
 spec:
-  #The filename or path where the pod names will be printed. 
-  #Ether if u write a path/filename.txt or filename.txt, it will have as a parent the /prints directory on the host machine.
-  path: pods.txt
-  #Interval in which the print will execute
+  # The path where the file will be stored.
+  # Note: the operator mounts a volume on host machine with the 
+  # /prints dir as a base for your path, example: /prints/mypath
+  path: mypath/
+
+  #Interval in which the print will execute, crontab format
   schedule: "*/8 * * * * *"
+
+  #The .txt filename placed on the specified path
+  filename: pods
 ```
+The above yaml will produce a pods name print every 8 seconds on the /prints/mypath/pods.txt path
+
 Now you can apply the resource and start seeing the prints.
 ```bash
 kubectl apply -f resources/print-sample.yaml
@@ -45,9 +52,9 @@ minikube ssh
 ```
 To enter to the minikube virtual machine (That represents the host of the cluster) where the volume for the operator has been mounted.
 
-Then, you will be able to see the file in the path: prints/<your-spec-path-param/.txt-file>
+Then, you will be able to see the file in the path: prints/mypath/pods.txt
 ```bash
-cat /prints/pods.txt
+cat /prints/mypath/pods.txt
 ```
 
 Otherwise you should connect to the host machine via ssh and retrieve the .txt file
@@ -72,4 +79,4 @@ Otherwise you should connect to the host machine via ssh and retrieve the .txt f
 
 - [Done] testing in cluster
 
-- Test filename change/ Fix when a path is not empty
+- [Done]Test filename change/ Fix when a path is not empty
