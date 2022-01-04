@@ -4,6 +4,6 @@ metadata:
   name: print-sample
   namespace: default
 spec:
-  path: 'test/test2/'
-  filename: print
-  schedule: "*/8 * * * * *"
+  path: 'test/'
+  filename: pods
+  schedule: "*/12 * * * * *"

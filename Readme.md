@@ -1,5 +1,11 @@
 # K8S Typescript based print-operator
 
+## Compile typescript and build docker image
+```bash
+npm run compile
+docker build -t myrepo/imagename .
+docker push myrepo/imagename
+```
 ## Installing the helm chart
 
 To install the kubernetes resources needed,
@@ -58,25 +64,3 @@ cat /prints/mypath/pods.txt
 ```
 
 Otherwise you should connect to the host machine via ssh and retrieve the .txt file
-
-## To-do
-
-- [Done] Cron format schedule spec input for specifying time interval.
-
-- [Done] Checking when there is more than one custom resource created.
-
-- [Done] Stoping node-cron task when the custom resource is deleted
-
-- [XD] Understanding all the code
-
-- [Done] Mapping volumes to access the file
-
-- Organize typescript
-
-- [Done] Fix Dockerfile and test to run the container
-
-- [Done] Create initial helm chart
-
-- [Done] testing in cluster
-
-- [Done]Test filename change/ Fix when a path is not empty

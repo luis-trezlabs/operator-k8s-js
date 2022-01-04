@@ -22,8 +22,6 @@ spec:
           properties:
             spec:
               type: object
-              required:
-                - path
               properties:
                 path:
                   type: string
