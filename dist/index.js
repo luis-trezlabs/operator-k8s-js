@@ -41,6 +41,10 @@ class PodNamesOperator extends k8s_operator_1.default {
                     var today = new Date().toLocaleString();
                     console.log(today + '\t' + ((_a = element.metadata) === null || _a === void 0 ? void 0 : _a.name));
                 });
+                console.log('\nTask Executed Successfully!');
+                console.log('\nBye!');
+                this.stop();
+                process.exit(0);
             });
         });
     }

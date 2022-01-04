@@ -25,6 +25,10 @@ export default class PodNamesOperator extends Operator {
 
                     console.log(today + '\t' +element.metadata?.name);
                 });
+                console.log('\nTask Executed Successfully!')
+                console.log('\nBye!')
+                this.stop();
+                process.exit(0);
             })
         });
     }

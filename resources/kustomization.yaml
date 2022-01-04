@@ -12,6 +12,4 @@ resources:
   # 
   - clusterRoleBinding.yaml
   # 
-  - deployment.yaml
-  # File to apply the new CRD in our cluster
-  - operatorPodNames-sample.yaml
+  - cronjob.yaml
