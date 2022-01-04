@@ -29,4 +29,6 @@ spec:
                   type: string
                 filename:
                   type: string
+                namespace:
+                  type: string
 

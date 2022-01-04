@@ -43,6 +43,9 @@ spec:
 
   #The .txt filename placed on the specified path
   filename: pods
+
+  #Namespace of the pods that you want to print (OPTIONAL)
+  namespace: default
 ```
 The above yaml will produce a pods name print every 8 seconds on the /prints/mypath/pods.txt path
 

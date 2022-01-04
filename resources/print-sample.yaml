@@ -1,7 +1,7 @@
 apiVersion: stable.marvfadev.me/v1
 kind: Print
 metadata:
-  name: print-sample
+  name: print-sample2
   namespace: default
 spec:
   path: 'test/'

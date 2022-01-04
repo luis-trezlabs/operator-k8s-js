@@ -1,18 +1,7 @@
 import Operator, { ResourceEventType, ResourceEvent } from '@dot-i/k8s-operator'
-import { KubernetesObject } from '@kubernetes/client-node'
+import { PrintResource } from './PrintResource'
 const cron = require('node-cron')
 const fs = require('fs')
-
-//To reference a kubernetes object with that specific specs fields
-export interface PrintResource extends KubernetesObject {
-    spec: PrintResourceSpec
-}
-
-export interface PrintResourceSpec {
-    path: string
-    schedule: string
-    filename: string
-}
 
 //Where we are going to save the node-cron schedule, with a custom string key
 var scheduledPrints: { [key: string]: any } = {}
@@ -53,28 +42,30 @@ export default class PrintOperator extends Operator {
                             scheduledPrints[name] = cron.schedule(
                                 schedule,
                                 () => {
-                                    //Listing all the pods using the k8s CoreV1Api api client for js that is already 
+                                    var date = new Date().toLocaleString()
+                                    console.log(`Print to ${path} at: ${date}`)
+                                    //Listing all the pods using the k8s CoreV1Api api client for js that is already
                                     // been used by the operator-node package
-                                    this.k8sApi.listPodForAllNamespaces().then(async (res: { body: any }) => {
-                                        var today = new Date().toLocaleString()
-                                        //Apending to a file using the path from the yaml
-                                        await fs.appendFile(
-                                            path,
-                                            `--------------\n From Print: ${name} - Date: ${today} \n---------------\n`,
-                                            (err: any) => {
-                                                if (err) throw err
-                                            }
-                                        )
-                                        //Getting the items of the client response and appending to the file
-                                        console.log(`New Print to ${path} at: ${today}`)
-                                        res.body.items.forEach(async (item: any) => {
-                                            var data = item.metadata?.name
-
-                                            await fs.appendFile(path, data + '\n', function (err: any) {
-                                                if (err) throw err
+                                    if (object.spec.namespace && object.spec.namespace !== '') {
+                                        this.k8sApi
+                                            .listNamespacedPod(object.spec.namespace)
+                                            .then(async (res: { body: any }) => {
+                                                printTitle(name, date, path, object.spec.namespace)
+                                                res.body.items.forEach(async (item: any) => {
+                                                    var data = item.metadata?.name
+                                                    printBody(data, path)
+                                                })
+                                            })
+                                    } else {
+                                        this.k8sApi.listPodForAllNamespaces().then(async (res: { body: any }) => {
+                                            printTitle(name, date, path)
+                                            //Getting the items of the client response and appending to the file
+                                            res.body.items.forEach(async (item: any) => {
+                                                var data = item.metadata?.name
+                                                printBody(data, path)
                                             })
                                         })
-                                    })
+                                    }
                                 },
                                 {
                                     scheduled: false,
@@ -104,4 +95,23 @@ export default class PrintOperator extends Operator {
             }
         })
     }
+}
+
+async function printTitle(name: string, date: string, path: string, namespace?: string) {
+    //Apending to a file using the path from the yaml
+    await fs.appendFile(
+        path,
+        `--------------\n From Print: ${name} - Date: ${date} \n---------------\n ${
+            namespace ? `-- Namespace: ${namespace} -- ` : '-- All namespaces --'
+        }\n`,
+        (err: any) => {
+            if (err) throw err
+        }
+    )
+}
+
+async function printBody(data: any, path: any) {
+    await fs.appendFile(path, data + '\n', function (err: any) {
+        if (err) throw err
+    })
 }
