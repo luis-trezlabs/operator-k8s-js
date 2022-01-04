@@ -1,4 +1,3 @@
-
 const k8s = require('@kubernetes/client-node')
 const fs = require('fs')
 
@@ -19,11 +18,10 @@ console.info('Printing the pods name to the path ' + path)
 try {
     //Creating the directory  with the recursive option in case that the
     //path already exists
-    fs.mkdir(`/usr/share/prints/${path || ''}`, { recursive: true }, (err: any) => {
+    fs.mkdir(path, { recursive: true }, (err: any) => {
         if (err) {
             return console.error(err)
         }
-        console.log('Directory ' + path + ' created successfully!')
         
         //Listing all the pods using the k8s api client for js
         k8sApi.listPodForAllNamespaces().then(async (res: { body: any }) => {
@@ -37,7 +35,7 @@ try {
                 }
             )
             //Getting the items of the client response and appending to the file
-            console.log(`New Print to ${path} at: ${today}`)
+            console.log(`New Print to ${full_path} at: ${today}`)
             res.body.items.forEach(async (item: any) => {
                 var data = item.metadata?.name
                 console.log('printing pod: ' + data)

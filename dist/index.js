@@ -15,11 +15,10 @@ console.info('Printing the pods name to the path ' + path);
 try {
     //Creating the directory  with the recursive option in case that the
     //path already exists
-    fs.mkdir(`/usr/share/prints/${path || ''}`, { recursive: true }, (err) => {
+    fs.mkdir(path, { recursive: true }, (err) => {
         if (err) {
             return console.error(err);
         }
-        console.log('Directory ' + path + ' created successfully!');
         //Listing all the pods using the k8s api client for js
         k8sApi.listPodForAllNamespaces().then(async (res) => {
             var today = new Date().toLocaleString();
@@ -29,7 +28,7 @@ try {
                     throw err;
             });
             //Getting the items of the client response and appending to the file
-            console.log(`New Print to ${path} at: ${today}`);
+            console.log(`New Print to ${full_path} at: ${today}`);
             res.body.items.forEach(async (item) => {
                 var _a;
                 var data = (_a = item.metadata) === null || _a === void 0 ? void 0 : _a.name;
