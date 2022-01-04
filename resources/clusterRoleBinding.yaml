@@ -5,8 +5,8 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: mycustomresource-editor-role
+  name: ts-operator-editor-role
 subjects:
   - kind: ServiceAccount
-    name: ts-operator
+    name: ts-operator-sa
     namespace: ts-operator

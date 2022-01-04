@@ -2,7 +2,7 @@
   "name": "operator",
   "version": "1.0.0",
   "description": "Operator K8s with JS",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && node dist/index.js"
@@ -12,9 +12,9 @@
   "dependencies": {
     "@dot-i/k8s-operator": "^1.2.0",
     "@kubernetes/client-node": "^0.16.1",
-    "node-cron": "^3.0.0"
+    "typescript": "^4.5.4"
   },
   "devDependencies": {
-    "typescript": "^4.5.4"
+    "ts-node": "^10.1.0"
   }
 }

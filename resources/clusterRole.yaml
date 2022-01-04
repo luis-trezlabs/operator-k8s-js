@@ -1,25 +1,12 @@
-# permissions for end users to edit mycustomresources.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: print-operator-editor-role
+  name: ts-operator-editor-role
 rules:
   - apiGroups:
-      - custom.example.com
+      - stable.luisbodev.me
     resources:
-      - mycustomresources
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - custom.example.com
-    resources:
-      - mycustomresources/status
+      - operatorpodnames
     verbs:
       - create
       - delete

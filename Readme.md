@@ -26,3 +26,14 @@ spec:
 - Dockerfile
 
 - Create final helm chart to deliver to the client
+
+
+## Build the project
+```bash
+  # Build the operator
+  kustomize build resources/ | kubectl apply -f -
+```
+```bash
+  # shows all the resources, verbs and associated API-group.
+  kubectl api-resources -o wide
+```

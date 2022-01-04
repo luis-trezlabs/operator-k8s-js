@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ts-operator-deployment
+  labels:
+    app: ts-operator
+  namespace: ts-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ts-operator
+  template:
+    metadata:
+      labels:
+        app: ts-operator
+    spec:
+      containers:
+      - image: luisbodev/js-operator:latest
+        name: ts-operator
+        volumeMounts:
+          - mountPath: /usr/share/prints
+            name: prints-volume
+      volumes:
+      - name: prints-volume
+        hostPath:
+          #Directory on the host
+          path: /prints
+      serviceAccount: ts-operator-sa
+
+
+
+
+
+
+
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata: 
+#   name: ts-operator-deployment
+#   namespace: ts-operator
+#   labels:
+#     app: print-operator
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: print-operator
+#   template:
+#     metadata:
+#       labels:
+#         app: print-operator
+#     spec:
+#       containers:
+#         - image: marvintrezlabs/print-operator:latest
+#           name: print-operator
+#           volumeMounts:
+#           - mountPath: /usr/share/prints
+#             name: prints-volume
+#       volumes:
+#       - name: prints-volume
+#         hostPath:
+#           #Directory on the host
+#           path: /prints
+#       serviceAccountName: ts-operator-sa

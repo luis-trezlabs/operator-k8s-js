@@ -1,13 +1,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: ts-operator
-commonLabels:
-  app: ts-operator
 resources:
+  # File to create a new namespace
   - ts-operator-namespace.yaml
-  - ts-operator-workers-namespace.yaml
-  - ts-operator-sa.yaml
-  - mycustomresource-crd.yaml
-  - mycustomresource-editor-role.yaml
-  - ts-operator-clusterrolebinding.yaml
-  - ts-operator-deployment.yaml
+  # File to create our CRD (Custom Resource Definition)
+  - operatorPodNames-crd.yaml
+  # 
+  - serviceAccount.yaml
+  # 
+  - clusterRole.yaml
+  # 
+  - clusterRoleBinding.yaml
+  # 
+  - deployment.yaml
+  # File to apply the new CRD in our cluster
+  - operatorPodNames-sample.yaml

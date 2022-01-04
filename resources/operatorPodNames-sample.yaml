@@ -1,0 +1,7 @@
+apiVersion: stable.luisbodev.me/v1
+kind: OperatorPodName
+metadata:
+  name: operator-pod-name-sample
+  namespace: ts-operator
+spec:
+  path: pods.txt

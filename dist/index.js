@@ -18,62 +18,44 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const k8s_operator_1 = __importStar(require("@dot-i/k8s-operator"));
-const cron = require('node-cron');
-const k8s = require('@kubernetes/client-node');
-const fs = require('fs');
+const k8s_operator_1 = __importDefault(require("@dot-i/k8s-operator"));
+const k8s = __importStar(require("@kubernetes/client-node"));
 const kc = new k8s.KubeConfig();
-kc.loadFromDefault();
+// kc.loadFromDefault();
+kc.loadFromCluster();
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
-class MyOperator extends k8s_operator_1.default {
+// To implement your operator and watch one or more resources, create a sub-class from Operator.
+class PodNamesOperator extends k8s_operator_1.default {
     async init() {
-        await this.watchResource('stable.marvfadev.me', 'v1', 'prints', async (e) => {
-            var _a;
-            const object = e.object;
-            const path = (_a = object.spec) === null || _a === void 0 ? void 0 : _a.path;
-            switch (e.type) {
-                case k8s_operator_1.ResourceEventType.Added:
-                    try {
-                        cron.schedule('*/10 * * * * *', () => {
-                            k8sApi.listPodForAllNamespaces().then((res) => {
-                                res.body.items.forEach(async (item) => {
-                                    var _a;
-                                    var today = new Date().toLocaleString();
-                                    var data = 'Date: ' + today + ' - ' + ((_a = item.metadata) === null || _a === void 0 ? void 0 : _a.name);
-                                    await fs.appendFile(path, data + '\n', function (err) {
-                                        var _a;
-                                        if (err)
-                                            throw err;
-                                        console.log('Date: ' + today + ' - ' + ((_a = item.metadata) === null || _a === void 0 ? void 0 : _a.name));
-                                    });
-                                });
-                            });
-                        });
-                    }
-                    catch (error) {
-                        console.log(error);
-                    }
-                    break;
-                case k8s_operator_1.ResourceEventType.Modified:
-                    // do something useful here
-                    break;
-                case k8s_operator_1.ResourceEventType.Deleted:
-                    // do something useful here
-                    break;
-            }
+        this.kubeConfig.loadFromCluster();
+        await this.watchResource('stable.luisbodev.me', 'v1', 'operatorpodnames', async (e) => {
+            k8sApi.listPodForAllNamespaces().then((res) => {
+                // Print in console the current time and pods names
+                console.log("Time \t\t\t Pod Name");
+                res.body.items.forEach((element) => {
+                    var _a;
+                    var today = new Date().toLocaleString();
+                    console.log(today + '\t' + ((_a = element.metadata) === null || _a === void 0 ? void 0 : _a.name));
+                });
+            });
         });
     }
 }
-exports.default = MyOperator;
-async function main() {
-    const operator = new MyOperator();
+exports.default = PodNamesOperator;
+async function start() {
+    const operator = new PodNamesOperator();
     await operator.start();
     const exit = (reason) => {
+        console.log('\nBye!');
         operator.stop();
         process.exit(0);
     };
-    process.on('SIGTERM', () => exit('SIGTERM')).on('SIGINT', () => exit('SIGINT'));
+    process.on('SIGTERM', () => exit('SIGTERM'))
+        .on('SIGINT', () => exit('SIGINT'));
 }
-main();
+start();
 //# sourceMappingURL=index.js.map

@@ -1,7 +1,0 @@
-apiVersion: stable.marvfadev.me/v1
-kind: Print
-metadata:
-  name: print-sample
-  namespace: default
-spec:
-  path: pods.txt
