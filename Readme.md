@@ -1,21 +1,5 @@
 # K8S Typescript based operator
 
-## To-do
-- Complete kubernetes resources for the operator deployment.
-
-- Cron format schedule spec input for specifying time interval.
-
-- Validation when there is more than one crd created.
-
-- Checking node-cron library performance.
-
-- Organize typescript
-
-- Dockerfile
-
-- Create final helm chart to deliver to the client
-
-
 # Steps to build the project
 ```bash
   # Clone the project to your local machine
