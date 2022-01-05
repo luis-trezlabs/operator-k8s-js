@@ -18,14 +18,13 @@ spec:
               volumeMounts:
               - mountPath: /usr/share/prints
                 name: prints-volume
-              # ports:
-              #   - containerPort: 8080
-              #     protocol: TCP
               env:
               - name: PRINT_PATH
                 value: {{.Values.data.path | default ""}}
               - name: PRINT_FILENAME
                 value: {{.Values.data.filename | default "pods"}}
+              - name: NAMESPACE
+                value: {{ .Values.data.namespace | default "" }}
           volumes:
           - name: prints-volume
             hostPath:

@@ -1,9 +1,0 @@
-apiVersion: stable.marvfadev.me/v1
-kind: Print
-metadata:
-  name: print-sample
-  namespace: default
-spec:
-  path: 'test/test2/'
-  filename: print
-  schedule: "*/8 * * * * *"

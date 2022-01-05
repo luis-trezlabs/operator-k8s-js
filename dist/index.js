@@ -19,29 +19,48 @@ try {
         if (err) {
             return console.error(err);
         }
-        //Listing all the pods using the k8s api client for js
-        k8sApi.listPodForAllNamespaces().then(async (res) => {
-            var today = new Date().toLocaleString();
-            //Apending to a file using the path from the yaml
-            await fs.appendFile(full_path, `--------------\n Date: ${today} \n---------------\n`, (err) => {
-                if (err)
-                    throw err;
-            });
-            //Getting the items of the client response and appending to the file
-            console.log(`New Print to ${full_path} at: ${today}`);
-            res.body.items.forEach(async (item) => {
-                var _a;
-                var data = (_a = item.metadata) === null || _a === void 0 ? void 0 : _a.name;
-                console.log('printing pod: ' + data);
-                await fs.appendFile(full_path, data + '\n', function (err) {
-                    if (err)
-                        throw err;
+        var date = new Date().toLocaleString();
+        if (process.env.NAMESPACE && process.env.NAMESPACE !== '') {
+            let namespace = process.env.NAMESPACE;
+            k8sApi.listNamespacedPod(namespace).then(async (res) => {
+                printTitle(date, full_path, namespace);
+                res.body.items.forEach(async (item) => {
+                    var _a;
+                    var data = (_a = item.metadata) === null || _a === void 0 ? void 0 : _a.name;
+                    printBody(data, full_path);
                 });
             });
-        });
+        }
+        else {
+            //Listing all the pods using the k8s api client for js
+            k8sApi.listPodForAllNamespaces().then(async (res) => {
+                //Apending to a file using the path from the yaml
+                printTitle(date, full_path);
+                //Getting the items of the client response and appending to the file
+                res.body.items.forEach(async (item) => {
+                    var _a;
+                    var data = (_a = item.metadata) === null || _a === void 0 ? void 0 : _a.name;
+                    console.log('printing pod: ' + data);
+                    printBody(data, full_path);
+                });
+            });
+        }
     });
 }
 catch (error) {
     console.log(error);
+}
+async function printTitle(date, path, namespace) {
+    //Apending to a file using the path from the yaml
+    await fs.appendFile(path, `--------------\n Date: ${date} \n---------------\n ${namespace ? `-- Namespace: ${namespace} -- ` : '-- All namespaces --'}\n`, (err) => {
+        if (err)
+            throw err;
+    });
+}
+async function printBody(data, path) {
+    await fs.appendFile(path, data + '\n', function (err) {
+        if (err)
+            throw err;
+    });
 }
 //# sourceMappingURL=index.js.map
