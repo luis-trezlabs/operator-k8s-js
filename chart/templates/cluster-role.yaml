@@ -1,4 +1,3 @@
-# permissions for end users to edit prints.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -18,35 +17,10 @@ rules:
       - update
       - watch
   - apiGroups:
-      - apps
-    verbs:
-      - create
-      - delete
-      - deletecollection
-      - get
-      - list
-      - patch
-      - update
-      - watch
-    resources:
-      - daemonsets
-      - deployments
-      - deployments/rollback
-      - deployments/scale
-      - replicasets
-      - replicasets/scale
-      - statefulsets
-      - statefulsets/scale
-  - apiGroups:
       - ''
     verbs:
-      - create
-      - delete
-      - deletecollection
       - get
       - list
-      - patch
-      - update
       - watch
     resources:
       - pods
