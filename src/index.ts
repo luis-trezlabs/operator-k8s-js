@@ -4,9 +4,13 @@ import * as fs from 'fs';
 
 const kc = new k8s.KubeConfig();
 
+// loadFromDefault() -> if you are going to use it directly in your cluster (as a CRD)
+// loadFromCluster() -> if you are going to use it as docker image
+
 // kc.loadFromDefault();
 kc.loadFromCluster();
 
+// Declaring api client for the coreV1Api export of the typescript client
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
 const path = '/usr/share/pod-logs/';

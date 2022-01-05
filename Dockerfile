@@ -1,3 +1,4 @@
+# Image base on node
 FROM node:16
 
 # Create app directory
