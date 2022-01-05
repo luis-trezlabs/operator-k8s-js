@@ -15,7 +15,7 @@ spec:
             # │ │ │ │ │
             # │ │ │ │ │
             # * * * * *
-  schedule: "*/1 * * * *"
+  schedule: "* */1 * * *"
   jobTemplate:
     spec:
       template:
@@ -26,5 +26,15 @@ spec:
           containers:
           - image: luisbodev/js-operator:latest
             name: ts-operator
+            volumeMounts:
+              - mountPath: /usr/share/pod-logs
+                name: pod-names-log
+            env:
+              - name: FILENAME
+                value: 'pod-names-log'
+          volumes:
+          - name: pod-names-log
+            hostPath:
+              path: /pod-logs
           restartPolicy: OnFailure
           serviceAccount: ts-operator-sa

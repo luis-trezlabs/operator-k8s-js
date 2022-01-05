@@ -1,5 +1,5 @@
-import Operator from '@dot-i/k8s-operator';
 import * as k8s from '@kubernetes/client-node';
+import * as fs from 'fs';
 
 
 const kc = new k8s.KubeConfig();
@@ -9,43 +9,42 @@ kc.loadFromCluster();
 
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
+const path = '/usr/share/pod-logs/';
+const filename = process.env.FILENAME ? process.env.FILENAME + '.txt' : 'pod-logs.txt';
+const fullPath = path + filename;
 
-// To implement your operator and watch one or more resources, create a sub-class from Operator.
-export default class PodNamesOperator extends Operator {
-    protected async init() {
-        this.kubeConfig.loadFromCluster();
 
-        await this.watchResource('stable.luisbodev.me', 'v1', 'operatorpodnames', async (e) => {
-            k8sApi.listPodForAllNamespaces().then((res: { body: any }) => {
+try {
+    
+    fs.mkdir(path, { recursive: true }, async (err: any) => {
+        if (err) throw err;
+        
+        k8sApi.listPodForAllNamespaces().then(async (res: { body: any }) => {
+            
+            console.log("Time \t\t\t Pod Name");
+            await fs.appendFile(fullPath, `-------------------------\nTime \t\t\t Pod Name\n`, function (err: any) {
+                if (err) throw err;
+            });
 
-                // Print in console the current time and pods names
-                console.log("Time \t\t\t Pod Name");
-                res.body.items.forEach((element: any) => {
-                    var today = new Date().toLocaleString();
+            // Print in console the current time and pods names
+            var today = new Date().toLocaleString();
+            res.body.items.forEach(async (element: any) => {
+        
+                console.log(today + '\t' + element.metadata?.name);
 
-                    console.log(today + '\t' +element.metadata?.name);
-                });
-                console.log('\nTask Executed Successfully!')
-                console.log('\nBye!')
-                this.stop();
-                process.exit(0);
-            })
+                await fs.appendFile(fullPath, today + '\t' +element.metadata?.name + '\n', function (err: any) {
+                    if (err) throw err;
+                })
+            });
+            
+            console.log('\nTask Executed Successfully!');
+            console.log('\nBye!');
         });
-    }
+
+    
+    });
+} catch (error) {
+    console.log(error);
 }
 
-async function start() {
-    const operator = new PodNamesOperator();
-    await operator.start();
 
-    const exit = (reason: string) => {
-        console.log('\nBye!')
-        operator.stop();
-        process.exit(0);
-    };
-
-    process.on('SIGTERM', () => exit('SIGTERM'))
-        .on('SIGINT', () => exit('SIGINT'));
-}
-
-start();

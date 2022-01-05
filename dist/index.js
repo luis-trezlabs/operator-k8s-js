@@ -18,48 +18,42 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const k8s_operator_1 = __importDefault(require("@dot-i/k8s-operator"));
 const k8s = __importStar(require("@kubernetes/client-node"));
+const fs = __importStar(require("fs"));
 const kc = new k8s.KubeConfig();
 // kc.loadFromDefault();
 kc.loadFromCluster();
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
-// To implement your operator and watch one or more resources, create a sub-class from Operator.
-class PodNamesOperator extends k8s_operator_1.default {
-    async init() {
-        this.kubeConfig.loadFromCluster();
-        await this.watchResource('stable.luisbodev.me', 'v1', 'operatorpodnames', async (e) => {
-            k8sApi.listPodForAllNamespaces().then((res) => {
-                // Print in console the current time and pods names
-                console.log("Time \t\t\t Pod Name");
-                res.body.items.forEach((element) => {
-                    var _a;
-                    var today = new Date().toLocaleString();
-                    console.log(today + '\t' + ((_a = element.metadata) === null || _a === void 0 ? void 0 : _a.name));
-                });
-                console.log('\nTask Executed Successfully!');
-                console.log('\nBye!');
-                this.stop();
-                process.exit(0);
+const path = '/usr/share/pod-logs/';
+const filename = process.env.FILENAME ? process.env.FILENAME + '.txt' : 'pod-logs.txt';
+const fullPath = path + filename;
+try {
+    fs.mkdir(path, { recursive: true }, async (err) => {
+        if (err)
+            throw err;
+        k8sApi.listPodForAllNamespaces().then(async (res) => {
+            console.log("Time \t\t\t Pod Name");
+            await fs.appendFile(fullPath, `-------------------------\nTime \t\t\t Pod Name\n`, function (err) {
+                if (err)
+                    throw err;
             });
+            // Print in console the current time and pods names
+            var today = new Date().toLocaleString();
+            res.body.items.forEach(async (element) => {
+                var _a, _b;
+                console.log(today + '\t' + ((_a = element.metadata) === null || _a === void 0 ? void 0 : _a.name));
+                await fs.appendFile(fullPath, today + '\t' + ((_b = element.metadata) === null || _b === void 0 ? void 0 : _b.name) + '\n', function (err) {
+                    if (err)
+                        throw err;
+                });
+            });
+            console.log('\nTask Executed Successfully!');
+            console.log('\nBye!');
         });
-    }
+    });
 }
-exports.default = PodNamesOperator;
-async function start() {
-    const operator = new PodNamesOperator();
-    await operator.start();
-    const exit = (reason) => {
-        console.log('\nBye!');
-        operator.stop();
-        process.exit(0);
-    };
-    process.on('SIGTERM', () => exit('SIGTERM'))
-        .on('SIGINT', () => exit('SIGINT'));
+catch (error) {
+    console.log(error);
 }
-start();
 //# sourceMappingURL=index.js.map
