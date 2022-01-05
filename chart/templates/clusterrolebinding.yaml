@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: manager-rolebinding
+  name: {{ .Values.name }}
   namespace: {{ .Values.name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: "{{ .Values.name }}-editor-role"
+  name: "{{ .Values.name }}-role"
 subjects:
   - kind: ServiceAccount
     name: {{ .Values.name }}

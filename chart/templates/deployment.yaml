@@ -21,9 +21,6 @@ spec:
           volumeMounts:
           - mountPath: /usr/share/prints
             name: prints-volume
-          # ports:
-          #   - containerPort: 8080
-          #     protocol: TCP
       volumes:
       - name: prints-volume
         hostPath:

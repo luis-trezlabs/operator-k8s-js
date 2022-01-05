@@ -1,4 +1,5 @@
 name: print-operator
 deployment:
+  #We recommend not to change the image
   image: marvintrezlabs/print-operator
   tag: latest

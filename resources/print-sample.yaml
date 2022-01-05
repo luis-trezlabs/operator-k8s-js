@@ -1,9 +1,10 @@
 apiVersion: stable.marvfadev.me/v1
 kind: Print
 metadata:
-  name: print-sample2
+  name: print-sample
   namespace: default
 spec:
   path: 'test/'
   filename: pods
   schedule: "*/12 * * * * *"
+  # namespace: default
