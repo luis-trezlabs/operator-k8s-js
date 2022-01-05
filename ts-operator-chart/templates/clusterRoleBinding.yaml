@@ -9,4 +9,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: ts-operator-sa
-    namespace: ts-operator
+    namespace: {{ .Values.metadata.namespace }}

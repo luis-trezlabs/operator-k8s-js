@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.metadata.name }}
+  labels:
+    app: {{ .Values.metadata.name }}
+  namespace: {{ .Values.metadata.namespace }}
+spec:
+  schedule: "{{ .Values.data.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: "{{ .Values.metadata.name }}"
+        spec:
+          containers:
+          - image: "luisbodev/js-operator:{{ .Values.image.tag }}"
+            name: {{ .Values.metadata.name }}
+            volumeMounts:
+              - mountPath: /usr/share/pod-logs
+                name: pod-names-log
+            env:
+              - name: FILENAME
+                value: {{ .Values.data.filename }}
+          volumes:
+          - name: pod-names-log
+            hostPath:
+              path: /pod-logs
+          restartPolicy: OnFailure
+          serviceAccount: ts-operator-sa
