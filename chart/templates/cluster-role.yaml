@@ -1,0 +1,26 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: "{{ .Values.name }}-role"
+  namespace: {{ .Values.name }}
+rules:
+  - apiGroups:
+      - stable.marvfadev.me
+    resources:
+      - prints
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - ''
+    verbs:
+      - get
+      - list
+      - watch
+    resources:
+      - pods
